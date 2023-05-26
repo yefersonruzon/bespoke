@@ -1,0 +1,57 @@
+@import "@/app/index.scss";
+
+.footer{
+    width: 100vw;
+    height: fit-content;
+    background: $text-tittle;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 60px 55px;
+    .grid_fototer_section{
+        width: 100vw;
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+        grid-gap: 50px;
+        .logo{
+            color: $text-gray;
+            a{
+                display: flex;
+                color: $background;
+                text-decoration: none;
+                align-items: center;
+                margin-bottom: 20px;
+                img{
+                    width: 30px;
+                    margin-right: 5px;
+                }
+            }
+        }
+        .list{
+            list-style: none;
+            h5{
+                font-size: 18px;
+                color: $background;
+                margin-bottom: 15px;
+                position: relative;
+                width: fit-content;
+ 
+            }
+            li{
+                margin: 0 0 15px;
+                transition: transform ease .1s;
+                &:hover{
+                    padding-left: 3px;
+                    a{
+                        color: $background;
+                    }
+                }
+                a{
+                    color: $text-gray;
+                    text-decoration: none;
+                    transition: color ease .1s;
+                }
+            }
+        }
+    }
+}

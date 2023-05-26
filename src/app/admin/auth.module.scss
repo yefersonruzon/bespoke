@@ -1,0 +1,221 @@
+@import "@/app/index.scss";
+
+.LoginPage{
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 400;
+    .NavBar{
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 80px;
+        overflow: hidden;
+        justify-content: flex-start;
+        align-items: center;
+        .logoContainer{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px 0 20px;
+            a{
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                color: $black;
+            }
+            .Logo{
+                width: 30px;
+            }
+        }
+    }
+    .Form{
+        width: 55vw;
+        padding: 0 20px;
+        display: flex;
+        margin-left: 35px;
+        flex-direction: column;
+        transform: translateY(20px);
+        &>h3{
+            font-size: 21px;
+        }
+        .LoginRow{
+            display: flex;
+            width: 70%;
+            position: relative;
+            justify-content: space-between;
+            // .GoogleLogin, .AppleLogin{
+            //     width: 50%;
+            //     background: $background;
+            //     border: 1.5px solid $gray;
+            //     position: relative;
+            //     border-radius: 5px;
+            //     display: flex;
+            //     align-items: center;
+            //     justify-content: center ;
+            //     padding: 8px 0px;
+            //     margin: 20px 5px 15px 0;
+            //     font-size: 14px;
+            //     img{
+            //         width: 15px;
+            //         margin-right: 10px;
+            //     }
+            //     cursor: pointer;
+            // }
+            .GoogleLogin{
+                width: 100%;
+                background: $background;
+                border: 1.5px solid $gray;
+                position: relative;
+                border-radius: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center ;
+                padding: 8px 0px;
+                margin: 20px 5px 15px 0;
+                font-size: 14px;
+                img{
+                    width: 15px;
+                    margin-right: 10px;
+                }
+                cursor: pointer;
+            }
+        }
+        .bTag{
+            text-align: center;
+            width: 70%;
+            font-size: 15px;
+            font-weight: 400;
+            color: $text-gray;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            &::after, &::before{
+                content: "";
+                background: $gray;
+                width: 45%;
+                height: 2px;
+                border-radius: 10px;
+                position: relative;
+                display: flex;
+            }
+        }
+        .InputContainer{
+            display: flex;
+            flex-direction: column;
+            margin: 10px 0;
+            label{
+                margin: 0 0 3px;
+                span{
+                    color: $error;
+                }
+            }
+            input{
+                width: 70%;
+                padding: 12px 10px;
+                border-radius: 5px;
+                border: 2px solid $gray;
+                &:focus{
+                    outline: none;
+                }
+            }
+        }
+        .FormBtn{
+            width: 70%;
+            padding: 11px 0;
+            background: $black;
+            border: none;
+            color: $text;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 7px;
+            margin-top: 20px;
+            font-size: 14.5px;
+        } 
+        .registerlink{
+            a{
+                color: $primary;
+            }
+        }
+        .checkBoxContainer{
+            display: flex;
+            margin: 10px 0 5px;
+            align-items: center;
+            input{
+                margin-right: 8px;
+            }
+        }   
+        
+    }
+    .asidePage{
+         width: calc(45vw - 20px);
+         height: calc(100vh - 20px);
+         background: $primary;
+         margin: 10px 10px 10px 0;
+         transform: translateX(-10px);
+         border-radius: 25px;
+         position: relative;
+         display: flex;
+         justify-content: center;
+         background-image: url("https://images.pexels.com/photos/15236214/pexels-photo-15236214.jpeg?auto=compress&cs=tinysrgb&w=1800");
+         background-repeat: no-repeat;
+         background-size: cover;
+         &::after, &::before{
+            content: "";
+            position: absolute;
+            display: block;
+            background: $background;
+            width: 250px;
+            height: 250px;
+         }
+         &::after{
+            clip-path: circle(20.0% at 0 100%);
+            bottom: 0;
+            left: 0;
+        }
+        &::before{
+            clip-path: circle(20.0% at 100% 0);
+            top: 0;
+            right: 0;
+         }
+         .content{
+            position: absolute;
+            bottom: -10px;
+            padding-bottom: 40px;
+            text-align: center;
+            color: $background;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: scale(.9);
+            h1{
+                width: 70%;
+                font-size: 19px;
+                margin-bottom: 5px;
+            }
+            p{
+                width: 80%;
+                color: $gray;
+                opacity: .9;
+            }
+            .rowBtn{
+                display: flex;
+                span{
+                    margin: 15px 10px 0;
+                    padding: 7px 15px;
+                    border-radius: 5px;
+                    border:1px solid $gray;
+                    i{
+                        margin-right: 8px;
+                    }
+                }
+            }
+         }
+    }
+}

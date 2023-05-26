@@ -1,0 +1,104 @@
+@import "@/app/index.scss";
+
+.nav_bar{
+    width: 100vw;
+    height: 60px;
+    background: $background;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 35px;
+    align-items: center;
+    font-size: 15px;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0px 0px 10px #20202013;
+    .logo_container{
+        width:100px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        p{
+            margin-left: 6px;
+            font-weight: 400;
+        }
+        .Image{
+            width: 30px;
+        }
+    }
+    .nav_list{
+        display: flex;
+        list-style: none;
+        li{
+            margin: 0 40px 0 0;
+            font-weight: 400;
+
+            display: flex;
+            position: relative;
+            align-items: center;
+            transform: scale(.9);
+            &::after{
+                content: "";
+                display: flex;
+                width: 0%;
+                height: 2px;
+                background: $color;
+                position: absolute;
+                bottom: -3px;
+                border-radius: 3px; 
+                transition: width ease .2s;
+                opacity: .7;               
+            }
+            &:first-child::after{
+                display: none;
+            }
+            &:hover::after{
+                width: 100%;
+            }
+            a{
+                text-decoration: none;
+                color: $color;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+    .search_container{
+        padding: 0 10px;
+        border: 2.1px solid $gray;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        transform: translateX(120px);
+        i{
+            color: $text-gray;
+        }
+        input{
+            padding: 5px 10px 5px 10px;
+            border: none;
+            &:focus{
+                outline: none;
+            }
+        }
+    }
+    .btn_container{
+        display: flex;
+        transform: translateX(-7px);
+        button{
+            background: none;
+            border: $gray 2px solid;
+            font-size: 16px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            transition: ease .4s background;
+            cursor: pointer;
+            &:hover{
+                background:$color ;
+                border: $color 2px solid;
+                color: $background;
+            }
+        }
+    }
+}
