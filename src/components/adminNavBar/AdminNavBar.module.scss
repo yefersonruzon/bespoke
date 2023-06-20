@@ -70,7 +70,7 @@
         border-radius: 5px;
         display: flex;
         align-items: center;
-        transform: translateX(150px);
+        margin-right: 10px;
         i{
             color: $text-gray;
         }
@@ -92,7 +92,9 @@
             height: 35px;
             border-radius: 50%;
             transition: ease .4s background;
+            margin: 0 6px;
             cursor: pointer;
+            
             &:hover{
                 background:$color ;
                 border: $color 2px solid;

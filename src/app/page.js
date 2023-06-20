@@ -80,7 +80,7 @@ export default function Home() {
                     </div>
                     <h4>Black dress</h4>
                     <div className={styles.price}>
-                        <p>$45</p><span>$52</span>
+                        <p>$45</p><span>-52%</span>
                     </div>
                     <i className="ri-shopping-cart-2-line"></i>
                 </div>
@@ -100,7 +100,7 @@ export default function Home() {
                     </div>
                     <h4>Black dress</h4>
                     <div className={styles.price}>
-                        <p>$45</p><span>$52</span>
+                        <p>$45</p><span>-52%</span>
                     </div>
                     <i className="ri-shopping-cart-2-line"></i>
                 </div>
