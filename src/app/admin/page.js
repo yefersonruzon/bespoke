@@ -16,16 +16,21 @@ import { db } from '../firebase';
 import { setDoc, doc, collection, getDocs, deleteDoc } from "firebase/firestore";
 
 
+
 export default function auth() {
     
     const [userLogin, setUserLogin] = useState(false);
     const [AddProduct, setAddProduct] = useState(false);
+
     const [ImageProduct, setImageProduct] = useState("");
     const [price, setPrice] = useState(0);
     const [pricePreview, setPricePreview] = useState(0);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState("title preview");
+    const [description, setDescription] = useState("description");
     const [discount, setDiscount] = useState(0);
+
+    const [edit, setEdit] = useState();
+
     //preview
     const [previewImageProduct, setPreviewImageProduct] = useState("");
     //getDocs
@@ -37,12 +42,24 @@ export default function auth() {
 
     const SubmitProduct = async (title, description, discount, price, ImageProduct) =>{
         const id = uuidv4()
-        const storangeRef =  ref(storage,  "products/" + title + '-' + id + '.png')
+        const storangeRef =  ref(storage,  "products/" +  id + '.png')
         const snapshot = await uploadBytesResumable(storangeRef, ImageProduct)
-        const url = await getDownloadURL(storangeRef).then(
-            setTimeSleep(!TimeSleep)
-        )
-        await setDoc(doc(db, "products", title  + "-" + id),{
+        const url = await getDownloadURL(storangeRef)
+        await setDoc(doc(db, "products/", id),{
+          Title:title,
+          Description:description,
+          Price:price,
+          Discount:discount,
+          ProductImage:url,
+          Id:id,
+        })
+      }
+      const SubmitEditProduct = async (title, description, discount, price, ImageProduct, Id) =>{
+        const id = Id
+        const storangeRef =  ref(storage,  "products/" +  id + '.png')
+        const snapshot = await uploadBytesResumable(storangeRef, ImageProduct)
+        const url = await getDownloadURL(storangeRef)
+        await setDoc(doc(db, "products", id),{
           Title:title,
           Description:description,
           Price:price,
@@ -59,20 +76,39 @@ export default function auth() {
           let valueDiscount = e.target.discount.value;
           let valuePrice = e.target.price.value;
 
-        
+          const id = edit
+        //   if(edit){
+        //     e.target.title.value = ""
+        //   }
         //   let totalPrice = valuePrice - (valuePrice * (valueDiscount / 100))
 
-          SubmitProduct(valueTitle, valueDescription, valueDiscount, valuePrice, ImageProduct).then(console.log("complete")).then(
-            document.getElementById("formAddProduct").reset(),
-            setImageProduct(""),
-            setPreviewImageProduct(""),
-            setDescription(""),
-            setTitle(""),
-            setPrice(""),
-            setDiscount(""),
-            setAddProduct(false),
-            
-            );
+          if(!id){
+            SubmitProduct(valueTitle, valueDescription, valueDiscount, valuePrice, ImageProduct).then(
+                document.getElementById("formAddProduct").reset(),
+                setImageProduct(""),
+                setPreviewImageProduct(""),
+                setDescription("description"),
+                setTitle("title"),
+                setPricePreview(0),
+                setDiscount(0),
+                setPrice(0),
+                setAddProduct(false),
+                setEdit()
+                );
+          }else{
+            SubmitEditProduct(valueTitle, valueDescription, valueDiscount, valuePrice, ImageProduct, id).then(
+                document.getElementById("formAddProduct").reset(),
+                setImageProduct(""),
+                setPreviewImageProduct(""),
+                setDescription("description"),
+                setTitle("title"),
+                setPrice(0),
+                setPricePreview(0),
+                setDiscount(0),
+                setAddProduct(false),
+                setEdit()
+            )
+          }
         }
 
 
@@ -89,7 +125,6 @@ export default function auth() {
     useEffect(() => {
       fireAuth.onAuthStateChanged((firebaseUSer) => {
         setUserLogin(firebaseUSer)
-
       })
     }, []);
 
@@ -119,40 +154,55 @@ export default function auth() {
   
         
         const postCollectionRef = collection(db, "products");
-        const [TimeSleep, setTimeSleep] = useState(false);
+
+        const getDocuments = async () => {
+            const querySnapshot = await getDocs(postCollectionRef);
+            const docs = []
+            querySnapshot.forEach((doc)=>{
+                docs.push({...doc.data(), id:doc.id});
+            })
+            setListProducts(docs)
+        };
+
 
         useEffect(() => {
-            const getDocuments = async () => {
-                const data = await getDocs(postCollectionRef);
-                setListProducts(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
-            };
             getDocuments();
-        }, [TimeSleep]);
+        }, [getDocuments()]);
 
-        setTimeout(() => {
-            setTimeSleep(true)
-        }, 2000);
 
-    const DeleteDoc = async (title, id) =>{
-        let DeleteRef = doc(db,"products", title  + "-" + id)
-        deleteDoc(DeleteRef)
-        let ImageRef = ref(storage, "products/" + title + "-" + id + ".png")
-        deleteObject(ImageRef)
         
+
+    const DeleteDoc = async (id) =>{
+        let DeleteRef = doc(db,"products/",  id)
+        deleteDoc(DeleteRef)
+        let ImageRef = ref(storage, "products/" + id + ".png")
+        deleteObject(ImageRef)
     }
+    
 
 
     return (
         userLogin ? 
-
+        
         <>
+
             <main className={styles.AddProductMain}>
             <AdminNavBar AddProduct={AddProduct} setAddProduct={setAddProduct}/>
- 
 
             {
                 AddProduct ?
                     <section className={styles.addProductSection}>
+                        <button className={styles.closeBtn} onClick={() => {
+                            setAddProduct(false); 
+                            setEdit();
+                            setPreviewImageProduct("");
+                            setDescription("description");
+                            setTitle("title");
+                            setPricePreview(0);
+                            setDiscount(0);
+                            }}>
+                            <i className="ri-close-line"></i>
+                        </button>
                         <div className={styles.ProductForm}>
                             <form onSubmit={submitProductInfo} id="formAddProduct">
                                 <h2>Add a new product</h2>
@@ -192,35 +242,43 @@ export default function auth() {
                                     <i className="ri-shopping-cart-2-line"></i>
                                 </div>
                             </div>
-                        </section> 
+                    </section> 
                     : 
                     null
                     
                             
                 }
+                
                 <section className={styles.ListProductsSection}>
                     {
-                        TimeSleep ? 
-
-                        listProducts.map(item =>(
-                            <div key={item.Id} className={styles.ListItem}>
-                                <img src={item.ProductImage} alt={item.Description} />
-                                <div className={styles.titleContainer}>
-                                    <h4>{item.Title} <p>{item.Price}<span>-{item.Discount}%</span></p></h4>
-                                    <p>{item.Description}</p>
-                                    
+                        listProducts ? 
+                            listProducts.map(item =>(
+                                <div key={item.Id} className={styles.ListItem}>
+                                    <img src={item.ProductImage} alt={item.Description} />
+                                    <div className={styles.titleContainer}>
+                                        <h4>{item.Title} <p>{item.Price}<span>-{item.Discount}%</span></p></h4>
+                                        <p>{item.Description}</p>
+                                        
+                                    </div>
+                                    <div className={styles.BtnContainer}>
+                                        <button onClick={() => {DeleteDoc(item.Id); setEdit()}}>
+                                            <i className="ri-delete-bin-5-line"></i>
+                                        </button>
+                                        <button onClick={() => {
+                                            setAddProduct(true);
+                                            setEdit(item.Id);
+                                            setPreviewImageProduct(item.ProductImage);
+                                            setDescription(item.Description);
+                                            setTitle(item.Title);
+                                            setPricePreview(item.Price);
+                                            setDiscount(item.Discount);
+                                        }}>
+                                            <i className="ri-edit-2-line"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className={styles.BtnContainer}>
-                                    <button onClick={() => {DeleteDoc(item.Title, item.Id);  setTimeSleep(!TimeSleep)}}>
-                                        <i className="ri-delete-bin-5-line"></i>
-                                    </button>
-                                    <button>
-                                        <i className="ri-edit-2-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        )) 
-                        : null
+                            )) 
+                            : null
                     }
                 </section>
 

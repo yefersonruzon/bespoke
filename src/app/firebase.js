@@ -9,13 +9,12 @@ import { getFirestore, setDoc, doc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB00a3f3HL3NFmKa_X8V-vCb4qUndLMrXc",
-  authDomain: "bespoke-951c2.firebaseapp.com",
-  databaseURL: "https://bespoke-951c2-default-rtdb.firebaseio.com",
-  projectId: "bespoke-951c2",
-  storageBucket: "bespoke-951c2.appspot.com",
-  messagingSenderId: "1045885500713",
-  appId: "1:1045885500713:web:82fad7a5395e7cf1e18b38"
+  apiKey: "AIzaSyCrQ_lAyy1aKo37JaNQYEDP2bIRAJcIoV8",
+  authDomain: "bespoke-ff9f2.firebaseapp.com",
+  projectId: "bespoke-ff9f2",
+  storageBucket: "bespoke-ff9f2.appspot.com",
+  messagingSenderId: "1038272310732",
+  appId: "1:1038272310732:web:05b4623b3c57a246564169"
 };
 
 // Initialize Firebase
