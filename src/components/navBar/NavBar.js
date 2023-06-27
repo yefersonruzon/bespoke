@@ -3,21 +3,21 @@ import styles from './NavBar.module.scss'
 import Image from 'next/image'
 import logo from '#/logoB.svg'
 import 'remixicon/fonts/remixicon.css'
-
+import Link from 'next/link'
 
 export default function NavBar() {
   return (
     <nav className={styles.nav_bar}>
-        <div className={styles.logo_container}>
+        <Link href="/" className={styles.logo_container}>
             <Image className={styles.Image} src={logo} width={35} height={35}/>
             <p>Bespoke</p>
-        </div>
+        </Link>
         <ul className={styles.nav_list}>
             <li>
-                <a href="#">
+                <Link href="/products">
                     <p>Shop</p>
                     <i className="ri-arrow-down-s-line"></i>
-                </a>
+                </Link>
             </li>
             <li>
                 <a href="#">

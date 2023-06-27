@@ -28,7 +28,8 @@ export default function auth() {
     const [title, setTitle] = useState("title preview");
     const [description, setDescription] = useState("description");
     const [discount, setDiscount] = useState(0);
-
+    const [SelectList, setSelectList] = useState("");
+    const [selectGenre, setSelectGenre] = useState("");
     const [edit, setEdit] = useState();
 
     //preview
@@ -40,7 +41,7 @@ export default function auth() {
     const auth = getAuth()
     const storage = getStorage()
 
-    const SubmitProduct = async (title, description, discount, price, ImageProduct) =>{
+    const SubmitProduct = async (title, description, discount, price, category, ImageProduct, genre) =>{
         const id = uuidv4()
         const storangeRef =  ref(storage,  "products/" +  id + '.png')
         const snapshot = await uploadBytesResumable(storangeRef, ImageProduct)
@@ -52,9 +53,11 @@ export default function auth() {
           Discount:discount,
           ProductImage:url,
           Id:id,
+          Category: category,
+          Genre:genre,
         })
       }
-      const SubmitEditProduct = async (title, description, discount, price, ImageProduct, Id) =>{
+      const SubmitEditProduct = async (title, description, discount, price, ImageProduct, category, Id, genre) =>{
         const id = Id
         const storangeRef =  ref(storage,  "products/" +  id + '.png')
         const snapshot = await uploadBytesResumable(storangeRef, ImageProduct)
@@ -65,6 +68,8 @@ export default function auth() {
           Price:price,
           Discount:discount,
           ProductImage:url,
+          Category: category,
+          Genre:genre,
           Id:id,
         })
       }
@@ -75,7 +80,6 @@ export default function auth() {
           let valueDescription = e.target.description.value;
           let valueDiscount = e.target.discount.value;
           let valuePrice = e.target.price.value;
-
           const id = edit
         //   if(edit){
         //     e.target.title.value = ""
@@ -83,7 +87,7 @@ export default function auth() {
         //   let totalPrice = valuePrice - (valuePrice * (valueDiscount / 100))
 
           if(!id){
-            SubmitProduct(valueTitle, valueDescription, valueDiscount, valuePrice, ImageProduct).then(
+            SubmitProduct(valueTitle, valueDescription, valueDiscount, valuePrice, SelectList,ImageProduct, selectGenre).then(
                 document.getElementById("formAddProduct").reset(),
                 setImageProduct(""),
                 setPreviewImageProduct(""),
@@ -93,10 +97,12 @@ export default function auth() {
                 setDiscount(0),
                 setPrice(0),
                 setAddProduct(false),
-                setEdit()
+                setEdit(),
+                setSelectGenre(""),
+                setSelectList("")
                 );
           }else{
-            SubmitEditProduct(valueTitle, valueDescription, valueDiscount, valuePrice, ImageProduct, id).then(
+            SubmitEditProduct(valueTitle, valueDescription, valueDiscount, valuePrice, ImageProduct, SelectList, id, selectGenre).then(
                 document.getElementById("formAddProduct").reset(),
                 setImageProduct(""),
                 setPreviewImageProduct(""),
@@ -106,7 +112,9 @@ export default function auth() {
                 setPricePreview(0),
                 setDiscount(0),
                 setAddProduct(false),
-                setEdit()
+                setEdit(),
+                setSelectGenre(""),
+                setSelectList("")
             )
           }
         }
@@ -179,6 +187,9 @@ export default function auth() {
         deleteObject(ImageRef)
     }
     
+    
+    
+
 
 
     return (
@@ -200,6 +211,8 @@ export default function auth() {
                             setTitle("title");
                             setPricePreview(0);
                             setDiscount(0);
+                            setSelectGenre("");
+                            setSelectList("");
                             }}>
                             <i className="ri-close-line"></i>
                         </button>
@@ -215,13 +228,35 @@ export default function auth() {
                                     <label htmlFor="description">Description</label>
                                     <textarea required onChange={(e) => {setDescription(e.target.value)}} placeholder='description...' id='description' />
                                 </div>
-                                <div className={styles.input_container}>
-                                    <label htmlFor="price">Price</label>
-                                    <input required onChange={(e) => {setPrice(e.target.value); setPricePreview(e.target.value)}} min="0" placeholder='price...' type="number" id='price' />
+                                <div className={styles.flex_input_container}>
+                                    <div className={styles.input_container}>
+                                        <label htmlFor="price">Price</label>
+                                        <input required onChange={(e) => {setPrice(e.target.value); setPricePreview(e.target.value)}} min="0" placeholder='price...' type="number" id='price' />
+                                    </div>
+                                    <div className={styles.input_container}>
+                                        <label htmlFor="discount">Discount</label>
+                                        <input onChange={(e) => {setDiscount(e.target.value);}} max="90" min="0" placeholder='discount...' type="number" id='discount' />
+                                    </div>
                                 </div>
                                 <div className={styles.input_container}>
-                                    <label htmlFor="discount">Discount</label>
-                                    <input onChange={(e) => {setDiscount(e.target.value);}} max="90" min="0" placeholder='discount...' type="number" id='discount' />
+                                        <label htmlFor="categories">Categories</label>
+                                        <select value={SelectList}  onChange={e=>setSelectList(e.target.value)}  required name="categories" id="categories" placeholder='Select a categorie'>
+                                            <option value=""  disabled hidden>Select a category</option>
+                                            <option value="shoes">Shoes</option>
+                                            <option value="shirt">Shirt</option>
+                                            <option value="jeans">Jeans</option>
+                                            <option value="accesories">Accesories</option>
+                                            <option value="hats">Hats</option>
+                                        </select>
+                                </div>
+                                <div className={styles.input_container}>
+                                        <label htmlFor="genre">Genre</label>
+                                        <select value={selectGenre}   onChange={e=>setSelectGenre(e.target.value)}  required name="genre" id="genre" placeholder='Select a genre'>
+                                            <option value=""  disabled hidden>Select a category</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="unisex">Unisex</option>
+                                        </select>
                                 </div>
                                 <div className={styles.input_container}>
                                     <label className={styles.imageLabel} htmlFor="ProductImage"><i className="ri-upload-cloud-2-line"></i></label>
@@ -254,9 +289,13 @@ export default function auth() {
                         listProducts ? 
                             listProducts.map(item =>(
                                 <div key={item.Id} className={styles.ListItem}>
+                                    {item.Discount ? 
+                                    <span>-{item.Discount}% discount</span>
+                                    
+                                    : null}
                                     <img src={item.ProductImage} alt={item.Description} />
                                     <div className={styles.titleContainer}>
-                                        <h4>{item.Title} <p>{item.Price}<span>-{item.Discount}%</span></p></h4>
+                                        <h4>{item.Title} <p>{item.Price} </p></h4>
                                         <p>{item.Description}</p>
                                         
                                     </div>
